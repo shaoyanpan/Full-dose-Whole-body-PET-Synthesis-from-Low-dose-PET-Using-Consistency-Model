@@ -89,6 +89,10 @@ loss = (all_loss["loss"] * weights).mean()
 
 **generate new synthetic images**
 ```
+# Create fake examples
+Low_dose = torch.randn([1,1,96,192]) #batch, channel, height, width
+
+
 # Set up the step# for your inference
 consistency_num = 3
 steps = np.round(np.linspace(1.0, 150.0, num=consistency_num))
@@ -96,8 +100,8 @@ def diffusion_sampling(condition,A_to_B_model):
     sampled_images = karras_sample(
                         consistency,
                         A_to_B_model,
-                        shape=condition.shape,
-                        condition=condition,
+                        shape=Low_dose.shape,
+                        condition=Low_dose,
                         sampler="multistep",
                         steps = 151,
                         ts = steps,
@@ -113,6 +117,7 @@ from monai.inferers import SlidingWindowInferer
 inferer = SlidingWindowInferer((image_size,image_size*2), Inference_patch_number_each_time, overlap=overlap,
                                mode =mode ,cval = back_ground_intensity, sw_device=device,device = device)
 
+# 
 samples = inferer(condition,diffusion_sampling,Consistency_network)  
 ```
 
