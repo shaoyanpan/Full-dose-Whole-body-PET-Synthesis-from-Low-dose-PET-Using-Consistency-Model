@@ -132,5 +132,5 @@ High_dose_samples = inferer(Low_dose,diffusion_sampling,Consistency_network)
 
 
 # Visual examples
-![Picture1](https://github.com/shaoyanpan/Full-dose-Whole-body-PET-Synthesis-from-Low-dose-PET-Using-Consistency-Model/assets/89927506/a42573ba-6765-41e1-acae-6b7a8b27cad7)
+![Picture1](https://github.com/shaoyanpan/Full-dose-Whole-body-PET-Synthesis-from-Low-dose-PET-Using-Consistency-Model/assets/89927506/15e56941-d7c6-4eab-994a-04e2d1d4d1df)
 
