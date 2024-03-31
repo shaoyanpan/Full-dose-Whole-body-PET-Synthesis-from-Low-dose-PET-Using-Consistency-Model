@@ -75,15 +75,23 @@ Consistency_network = SwinVITModel(
         resblock_updown=False,
         use_new_attention_order=False,
     ).to(device)
+
+# Don't forget the ema model. You must have this to run the code no matter you use ema or not.
+Consistency_network_ema = copy.deepcopy(Consistency_network)
 ```
 
 **Train the consistency model (you don't have to use the ema as in our .ipynb**
 ```
+# Create fake examples, just for you to run the code
+img_size = (96,192) # Adjust this for the size of your image input
+condition = torch.randn([1,1,96,192]) #batch, channel, height, width
+target = torch.randn([1,1,96,192]) #batch, channel, height, width
+
 all_loss = consistency.consistency_losses(Consistency_network,
             target,
             condition,
             num_scales,
-            target_model=A_to_B_model_ema)
+            target_model=Consistency_network_ema)
 loss = (all_loss["loss"] * weights).mean()
 ```
 
@@ -91,7 +99,7 @@ loss = (all_loss["loss"] * weights).mean()
 ```
 # Create fake examples
 Low_dose = torch.randn([1,1,96,192]) #batch, channel, height, width
-
+img_size = (96,192) # Adjust this for the size of your image input
 
 # Set up the step# for your inference
 consistency_num = 3
@@ -114,11 +122,11 @@ mode ='constant'
 back_ground_intensity = -1
 Inference_patch_number_each_time = 40
 from monai.inferers import SlidingWindowInferer
-inferer = SlidingWindowInferer((image_size,image_size*2), Inference_patch_number_each_time, overlap=overlap,
+inferer = SlidingWindowInferer(img_size, Inference_patch_number_each_time, overlap=overlap,
                                mode =mode ,cval = back_ground_intensity, sw_device=device,device = device)
 
 # 
-samples = inferer(condition,diffusion_sampling,Consistency_network)  
+High_dose_samples = inferer(Low_dose,diffusion_sampling,Consistency_network)  
 ```
 
 
