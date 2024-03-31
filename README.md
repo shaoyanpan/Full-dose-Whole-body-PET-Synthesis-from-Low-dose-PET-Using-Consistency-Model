@@ -19,7 +19,7 @@ conda env create -f \your directory\test_env.yaml
 
 The usage is in the jupyter notebook Consistency_Low_Dose_Denoising_main.ipynb. Including how to build the consistency-diffusion forward process, how to build a network, and how to call the whole Consistency process to train, and sample new synthetic images. However, we give simple example below:
 
-**Create diffusion**
+**Create Consistency-diffusion**
 ```
 from cm.resample import UniformSampler
 from cm.karras_diffusion import KarrasDenoiser,karras_sample
