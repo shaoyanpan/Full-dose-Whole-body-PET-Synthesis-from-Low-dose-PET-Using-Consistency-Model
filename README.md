@@ -1,7 +1,7 @@
 
-# 2D-Medical-Denoising-Diffusion-Probabilistic-Model
+# 2D-Medical-Consistency-Model
 **This is the repository for the paper published in Medical Physics: "[Full-dose Whole-body PET Synthesis from Low-dose PET Using High-efficiency Denoising Diffusion Probabilistic Model: PET Consistency Model](https://iopscience.iop.org/article/10.1088/1361-6560/acca5c/meta)".**
-Consistency Model is one of the super fast Diffusion Denoising Probability Models (DDPMs), which only use 2-timestep to generate the target image, while the DDPMs usually require 50- to 1000-timesteps. This is particular useful for: 1) Three-dimensional Medical image synthesis, 2) Image translation instead image creation like traditional DDPMs do.
+Consistency Model is one of the super fast Denoising Diffusion Probability Models (DDPMs), which only use 2-timestep to generate the target image, while the DDPMs usually require 50- to 1000-timesteps. This is particular useful for: 1) Three-dimensional Medical image synthesis, 2) Image translation instead image creation like traditional DDPMs do.
 
 The codes were created based on [image-guided diffusion](https://github.com/openai/guided-diffusion), [SwinUnet](https://github.com/HuCaoFighting/Swin-Unet), and [Monai](https://monai.io/)
 
@@ -22,7 +22,6 @@ The usage is in the jupyter notebook Consistency_Low_Dose_Denoising_main.ipynb. 
 ```
 from cm.resample import UniformSampler
 from cm.karras_diffusion import KarrasDenoiser,karras_sample
-
 consistency = KarrasDenoiser(        
         sigma_data=0.5,
         sigma_max=80.0,
@@ -90,9 +89,28 @@ loss = (all_loss["loss"] * weights).mean()
 
 **generate new synthetic images**
 ```
-num_sample = 10
-image_size = 256
-x = diffusion.p_sample_loop(model,(num_sample, 1, image_size, image_size),clip_denoised=True)
+# Inference parameter
+overlap = 0.75
+mode ='constant'
+back_ground_intensity = -1
+Inference_patch_number_each_time = 40
+from monai.inferers import SlidingWindowInferer
+inferer = SlidingWindowInferer((image_size,image_size*2), Inference_patch_number_each_time, overlap=overlap,
+                               mode =mode ,cval = back_ground_intensity, sw_device=device,device = device)
+steps = np.round(np.linspace(1.0, 150.0, num=5))
+def diffusion_sampling(condition,A_to_B_model):
+    sampled_images = karras_sample(
+                        consistency,
+                        A_to_B_model,
+                        shape=condition.shape,
+                        condition=condition,
+                        sampler="multistep",
+                        steps = 151,
+                        ts = steps,
+                        device = device)
+    return sampled_images
+
+samples = inferer(condition,diffusion_sampling,Consistency_network)  
 ```
 
 
