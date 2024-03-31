@@ -89,15 +89,9 @@ loss = (all_loss["loss"] * weights).mean()
 
 **generate new synthetic images**
 ```
-# Inference parameter
-overlap = 0.75
-mode ='constant'
-back_ground_intensity = -1
-Inference_patch_number_each_time = 40
-from monai.inferers import SlidingWindowInferer
-inferer = SlidingWindowInferer((image_size,image_size*2), Inference_patch_number_each_time, overlap=overlap,
-                               mode =mode ,cval = back_ground_intensity, sw_device=device,device = device)
-steps = np.round(np.linspace(1.0, 150.0, num=5))
+# Set up the step# for your inference
+consistency_num = 3
+steps = np.round(np.linspace(1.0, 150.0, num=consistency_num))
 def diffusion_sampling(condition,A_to_B_model):
     sampled_images = karras_sample(
                         consistency,
@@ -109,6 +103,15 @@ def diffusion_sampling(condition,A_to_B_model):
                         ts = steps,
                         device = device)
     return sampled_images
+
+# Patch-based inference parameter
+overlap = 0.75
+mode ='constant'
+back_ground_intensity = -1
+Inference_patch_number_each_time = 40
+from monai.inferers import SlidingWindowInferer
+inferer = SlidingWindowInferer((image_size,image_size*2), Inference_patch_number_each_time, overlap=overlap,
+                               mode =mode ,cval = back_ground_intensity, sw_device=device,device = device)
 
 samples = inferer(condition,diffusion_sampling,Consistency_network)  
 ```
