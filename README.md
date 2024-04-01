@@ -15,6 +15,10 @@ Create an environment using Anaconda:
 conda env create -f \your directory\test_env.yaml
 ```
 
+The data organization example is shown in folder "MRI_to_CT_brain_for_dosimetric\imagesTr". Or you can see the below screenshots:
+
+MATLAB files: every matlab file can contain a dict has image and label together. So you see you only need two folders: imagesTr for training, imagesTs for testing, and imagesVal for validation. You can change the name but please make sure also change the reading dir in the jupyter notebook
+
 # Usage
 
 The usage is in the jupyter notebook Consistency_Low_Dose_Denoising_main.ipynb. Including how to build the consistency-diffusion forward process, how to build a network, and how to call the whole Consistency process to train, and sample new synthetic images. However, we give simple example below:
@@ -105,7 +109,7 @@ img_size = (96,192) # Adjust this for the size of your image input
 # Set up the step# for your inference
 consistency_num = 3
 steps = np.round(np.linspace(1.0, 150.0, num=consistency_num))
-def diffusion_sampling(condition,A_to_B_model):
+def diffusion_sampling(Low_dose,A_to_B_model):
     sampled_images = karras_sample(
                         consistency,
                         A_to_B_model,
