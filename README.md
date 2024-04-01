@@ -15,9 +15,11 @@ Create an environment using Anaconda:
 conda env create -f \your directory\test_env.yaml
 ```
 
-The data organization example is shown in folder "MRI_to_CT_brain_for_dosimetric\imagesTr". Or you can see the below screenshots:
+The data organization example is shown in folder "data/pet_38_aligned". Or you can see the below screenshots:
+![image](https://github.com/shaoyanpan/Full-dose-Whole-body-PET-Synthesis-from-Low-dose-PET-Using-Consistency-Model/assets/89927506/a2fdf7af-25be-47d7-8b49-7bc7c2c2468f)
+MATLAB files: every matlab file can contain a dict has image and label together. So you see you only need two folders: imagesTr_full_2d for training, imagesTs_full_2d for testing. You can change the name but please make sure also change the reading dir in the jupyter notebook.
 
-MATLAB files: every matlab file can contain a dict has image and label together. So you see you only need two folders: imagesTr for training, imagesTs for testing, and imagesVal for validation. You can change the name but please make sure also change the reading dir in the jupyter notebook
+
 
 # Usage
 
