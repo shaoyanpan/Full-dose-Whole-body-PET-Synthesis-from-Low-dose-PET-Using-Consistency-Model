@@ -6,6 +6,8 @@ Consistency Model is one of the super fast Denoising Diffusion Probability Model
 
 The codes were created based on [image-guided diffusion](https://github.com/openai/guided-diffusion), [SwinUnet](https://github.com/HuCaoFighting/Swin-Unet), and [Monai](https://monai.io/)
 
+Notice: Due to the data restriction, we can only provide MATLAB file (so no patient information) with over-smoothed PET images. The data we show just to demonstrate how the user should organize their data. The dicom or nii file processing are also included in the Jupyter notebook.
+
 # Required packages
 
 The requires packages are in test_env.yaml.
